@@ -5,10 +5,6 @@ Day 2
 """
 
 import pandas as pd 
-from argparse import ArgumentParser
-
-parser = ArgumentParser(description='Process some integers.')
-parser.add_argument('--input_path', default = 'inputs/day2.txt', help = "path to input file")
 
 def get_data(input_path):
     data = pd.read_csv(input_path, sep=' ', header=None)
@@ -54,15 +50,15 @@ def score_outcome(opponent_move, outcome):
     if outcome == 3: 
         return wins[opponent_move] + 6
 
-def main(args):
-    data = get_data(args.input_path)
+def run_part_one(data):
     normalize(data)
     data['score_round_move'] = data.apply(lambda row : score_round(row['opponent'], row['me']), axis=1)
-    data['score_round_outcome'] = data.apply(lambda row : score_outcome(row['opponent'], row['me']), axis=1)
     data['total_part_1'] = data['score_round_move'] + data['me']
-    data['total_part_2'] = data['score_round_outcome']
-    print('part 1: ', data['total_part_1'].sum(), 'part 2: ', data['total_part_2'].sum())
+    return data['total_part_1'].sum()
 
-if __name__ == '__main__':
-    args = parser.parse_args()
-    main(args)
+def run_part_two(data):
+    normalize(data)
+    data['score_round_outcome'] = data.apply(lambda row : score_outcome(row['opponent'], row['me']), axis=1)
+    data['total_part_2'] = data['score_round_outcome']
+    return data['total_part_2'].sum()
+
